@@ -1,0 +1,64 @@
+#!/bin/bash
+
+## Jacob Gutierrez, gutierja@ohsu.edu, 8/13/20 
+## The purpose of the script is to 1) create the conda environment manually and reproducibly, 2) save the environment to be built easily, and 3) source the environment with one command `source /path/to/dl_R_env_stepup`
+## This file is run multiple times and is more a collection of all the commands to build and source an environment. 
+
+
+############# This document was copied from the thesis project #############
+## SECTION NOT USED ONLY REFERENCED
+## The conda environment was previously made with:
+#conda env create -f environment.yml --prefix=/home/groups/hoolock2/u0/jg/thesis/env/methylseq
+
+## 4/11/20 I have found errors in enviroments so I am trying a new way to create it manually then export the enviroment
+## JG 8/13: THIS IS HOW YOU MAKE ENVIRONMENTS THE FIRST TIME
+# I want 1) python=3.6 2) pandas 3) bismark 4) 
+#conda create --prefix=/home/groups/hoolock2/u0/jg/thesis/env/methylseq python=3.6 pandas xlrd r-base bioconductor-rtracklayer r-tidyverse r-ggpubr trim-galore bismark multiqc bedtools
+## END OF NOT USED SECTION
+#############################################################################
+
+
+##################### JG 8/13/20 Set Channels #####################
+
+
+## Edit prompt to show name ONLY DO ONCE
+#conda config --set env_prompt '({name}) '
+
+## Adding channels to conda ONLY DO ONCE
+conda config --add channels defaults
+conda config --add channels r ## To make rtracklayer dependencies work! (potentially 4/15/20)
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+
+
+
+##################### JG 8/13/20 Make R environment#####################
+#conda create --prefix=/Users/Jacobg/Documents/genic_compensation_dl/env/R_conda R r-base r-tidyverse r-ggpubr bioconductor-geoquery
+
+
+
+##################### Initialize env by sourcing this section all else can be commented #####################
+
+## Not sure what this did Supposedly puts environment on path?
+#conda config --append envs_dirs /Users/Jacobg/Documents/genic_compensation_dl/env/R_conda
+
+## This script activates the enviroment
+#conda activate /Users/Jacobg/Documents/genic_compensation_dl/env/R_conda
+
+# Deactivate as normal 
+#conda deactivate
+
+
+## Update the enrvionment.yml file
+#conda env export --no-builds | grep -v "prefix" > r_conda_env.yml
+#conda env export --no-builds > r_conda_env.yml
+
+
+##################### JG 8/13/20 Build R environment from file #####################
+
+#conda create -f r_conda_env.yml --prefix=/Users/Jacobg/Documents/genic_compensation_dl/env/R_conda
+
+## To remove this environment
+##### BECAREFUL THIS DELETES THE env/ DIRECTORY!
+#conda env remove -p /Users/Jacobg/Documents/genic_compensation_dl/env/R_conda
